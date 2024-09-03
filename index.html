@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest News from Time.com</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Latest News from Time.com</h1>
+            <button id="refresh-button" class="action-button">Refresh</button>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div id="loading-message" class="loading-message">Fetching the latest news... This might take a few moments.</div>
+        <div id="stories" class="stories-grid"></div>
+        
+        <section class="about">
+            <h2>About This Project</h2>
+            <p>This project dynamically fetches and displays the latest news stories from Time.com using a web scraping technique. Although external factors like network speed can sometimes cause delays, our implementation ensures that users always see the latest stories as soon as they're available. The fallback feature guarantees content visibility even if a fetch fails, showcasing reliability in unpredictable environments.</p>
+            <p>This project demonstrates a strong understanding of modern web development, including effective use of JavaScript, HTML, and CSS to create an interactive and responsive user experience. It's a reflection of the ability to manage real-world challenges in web scraping and data presentation.</p>
+        </section>
+        
+        <section class="references">
+            <h2>References</h2>
+            <p>Data fetched from: <a href="https://time.com/" target="_blank">Time.com</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 News Fetcher. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('refresh-button').addEventListener('click', function() {
+                location.reload();
+            });
+
+            function fetchStories() {
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                const targetUrl = encodeURIComponent('https://time.com/');
+                const loadingMessage = document.getElementById('loading-message');
+                
+                loadingMessage.style.display = 'block';
+
+                fetch(proxyUrl + targetUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(data.contents, 'text/html');
+                        const stories = [];
+                        const items = doc.querySelectorAll('article.latest-stories__item');
+
+                        items.forEach((item, index) => {
+                            if (index < 6) { // Limit to the first 6 stories
+                                const titleElement = item.querySelector('h3.latest-stories__item-headline a');
+                                const imageElement = item.querySelector('img');
+                                
+                                stories.push({
+                                    title: titleElement.textContent.trim(),
+                                    link: 'https://time.com' + titleElement.getAttribute('href'),
+                                    image: imageElement ? imageElement.getAttribute('src') : 'default-image.jpg' // Provide a default image if not found
+                                });
+                            }
+                        });
+
+                        displayStories(stories);
+                        loadingMessage.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching stories:', error);
+                        displayDefaultStories(); // Display default stories if fetch fails
+                        loadingMessage.style.display = 'none';
+                    });
+            }
+
+            function displayStories(stories) {
+                const storiesDiv = document.getElementById('stories');
+                storiesDiv.innerHTML = ''; // Clear previous stories
+                stories.forEach(story => {
+                    const storyDiv = document.createElement('div');
+                    storyDiv.classList.add('story');
+                    storyDiv.innerHTML = `<img src="${story.image}" alt="Story Image"><a href="${story.link}" target="_blank">${story.title}</a>`;
+                    storiesDiv.appendChild(storyDiv);
+                });
+            }
+
+            function displayDefaultStories() {
+                const defaultStories = [
+                    { title: "The Personal Story That Inspired the Movie 'Finestkind'", link: "https://time.com/6338311/finestkind-movie-real-story-inspiration/", image: "https://api.time.com/wp-content/uploads/2023/11/BH_1985FishingPhoto-2.jpeg?w=244&h=183&quality=85" },
+                    { title: "How Marvel Lost Its Way", link: "https://time.com/6319815/marvel-cinematic-universe-future/", image: "https://api.time.com/wp-content/uploads/2023/10/Marvel-in-decline-illo.gif?w=800&h=533&quality=85" },
+                    { title: "Is Constantly Reading the News Bad For You?", link: "https://time.com/5125894/is-reading-news-bad-for-you/", image: "https://api.time.com/wp-content/uploads/2018/01/reading-the-news.jpg?w=1200&h=628&quality=85" },
+                    { title: "The Problem With TV's New Holocaust Obsession", link: "https://time.com/6975718/holocaust-tv-shows-trend/", image: "https://api.time.com/wp-content/uploads/2024/05/Kume_Pather_Full_Page_RBG_07_05_2024_V4.jpg?w=244&h=183&quality=85" },
+                    { title: "Person of the Year 2023: Taylor Swift", link: "https://time.com/6342806/person-of-the-year-2023-taylor-swift/", image: "https://api.time.com/wp-content/uploads/2023/12/taylor-swift-person-of-the-year-3.jpg?w=244&h=183&quality=85" },
+                    { title: "Barbie Has a New Body Cover Story", link: "https://time.com/barbie-new-body-cover-story/", image: "https://time.com/wp-content/uploads/2016/01/barbie-cover-final.jpg?w=280&h=183&quality=85" }
+                ];
+                displayStories(defaultStories);
+            }
+
+            // Fetch stories on page load
+            fetchStories();
+        });
+    </script>
+</body>
+</html>

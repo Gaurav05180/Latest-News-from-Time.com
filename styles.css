@@ -1,0 +1,108 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #0073e6;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 4px solid #005bb5;
+}
+
+header h1 {
+    font-size: 2.5em;
+}
+
+.action-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#refresh-button {
+    background-color: #28a745;
+}
+
+#refresh-button:hover {
+    background-color: #218838;
+}
+
+main {
+    padding: 40px 0;
+}
+
+.loading-message {
+    font-size: 1.2em;
+    color: #ff0000;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.story {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.story a {
+    text-decoration: none;
+    color: #0073e6;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.story img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.story:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+   
